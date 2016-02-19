@@ -10,6 +10,13 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url mibeaconsUrl
+            credentials {
+                username mibeaconsUsername
+                password mibeaconsPassword
+            }
+        }
     }
 }
 
