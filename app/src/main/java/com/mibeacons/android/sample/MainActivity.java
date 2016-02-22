@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements AppCallback, Beac
     private static final int REQUEST_CODE_PERMISSION = 100;
 
     private BeaconServiceManager beaconServiceManager;
+    private MiBeaconAdapter miBeaconAdapter;
 
     private RecyclerView content;
     private View progress;
@@ -48,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements AppCallback, Beac
         message = (TextView) findViewById(R.id.message);
 
         setSupportActionBar(toolbar);
+
+        miBeaconAdapter = new MiBeaconAdapter(this);
+        content.setLayoutManager(new LinearLayoutManager(this));
+        content.setAdapter(miBeaconAdapter);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             initiateBeaconServiceManager();
@@ -189,7 +195,14 @@ public class MainActivity extends AppCompatActivity implements AppCallback, Beac
     }
 
     @Override
-    public void onScanComplete(List<MiBeacon> list, List<MiBeacon> list1) {
+    public void onScanComplete(final List<MiBeacon> knownBeacons, List<MiBeacon> allBeaconsInRange) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(false);
+                miBeaconAdapter.setBeacons(knownBeacons);
+            }
+        });
         beaconServiceManager.getService().getAllBeaconsInRangeOnNextScan(this);
     }
 }
