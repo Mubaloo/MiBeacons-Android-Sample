@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.mibeacons.android.sample"
+        minSdkVersion 18
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        buildConfigField "String", "API_URL", mibeaconsApiUrl
+        buildConfigField "String", "API_KEY", mibeaconsApiKey
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext.supportLibraryVersion = '23.1.1'
+
+dependencies {
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+
+    compile 'com.mibeacons:sdk:0.19.1'
+
+    testCompile 'junit:junit:4.12'
+}
